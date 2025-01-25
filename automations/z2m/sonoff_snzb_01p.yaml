@@ -4,6 +4,9 @@ blueprint:
     Configure actions for the Sonoff Zigbee Wireless Button SNZB-01P using Zigbee2MQTT.
     Define actions for single, double, and long press events.
   domain: automation
+  author: "SuperITMan"
+  homeassistant: 
+    min_version: 2025.1.0
   input:
     button_id:
       name: Button
