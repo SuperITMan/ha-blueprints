@@ -1,0 +1,57 @@
+blueprint:
+  name: Z2M - Sonoff wireless Contact sensor SNZB-04
+  description:
+    Configure actions for the Sonoff Zigbee Wireless Contact Sensor SNZB-04 using Zigbee2MQTT.
+    Define actions for open and close events.
+  domain: automation
+  author: "SuperITMan"
+  homeassistant: 
+    min_version: 2025.1.0
+  input:
+    contact_sensor_entity_id:
+      name: Contact sensor
+      description: The Contact sensor to configure.
+      selector:
+        entity:
+          integration: mqtt
+          domain: binary_sensor
+          device_class: door
+          multiple: false
+    open_action:
+      name: Open Action
+      description: Action to perform on Open.
+      default: []
+      selector:
+        action: {}
+    close_action:
+      name: Close Action
+      description: Action to perform on Close.
+      default: []
+      selector:
+        action: {}
+mode: restart
+max_exceeded: silent
+
+variables:
+  contact_sensor_entity_id: !input contact_sensor_entity_id
+  open_action: !input open_action
+  close_action: !input close_action
+
+triggers:
+  - trigger: state
+    entity_id: !input contact_sensor_entity_id
+    to: "on"
+    id: open
+  - trigger: state
+    entity_id: !input contact_sensor_entity_id
+    to: "off"
+    id: closed
+
+action:
+  - choose:
+      - conditions:
+          - "{{ trigger.id == 'open' }}"
+        sequence: !input open_action
+      - conditions:
+          - "{{ trigger.id == 'closed' }}"
+        sequence: !input close_action
